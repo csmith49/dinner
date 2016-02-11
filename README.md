@@ -13,3 +13,9 @@ on the command line.
 - `-p prefix` -- don't like dinner? replace `DINNER_STAT` with whatever you want.
  
 Without configuration, `dinner` only records CPU time. Any output sent to `STDOUT` not prefixed appropriately is ignored.
+
+# Example
+I'm benchmarking my Python script `foobar` -- I have a list of test arguments in `benchmarking.txt`, I want the output in `today.log`, and I'm okay with the default prefix. My command is then
+```
+python3 dinner.py -c "python3 foobar.py" -f benchmarking.txt -o today.log
+```
