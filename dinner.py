@@ -35,11 +35,13 @@ def construct_runner(command, limiter, prefix):
         # store the current CPU usage of child processes
         # includes the usage of starting up a new python process, unfortunately
         old_time = r.getrusage(r.RUSAGE_CHILDREN)[0]
-        # execute command in separate process
-        result = subprocess.check_output([command] + args, preexec_fn=limiter) 
-        # construct output dict with default columns
-        output = {"cpu" : r.getrusage(r.RUSAGE_CHILDREN)[0] - old_time,
-                    "name" : name}
+        # try to execute command in separate process
+        try:
+            result = subprocess.check_output([command] + args, preexec_fn=limiter)
+        except subprocess.CalledProcessError as e:
+            result = e.output
+        # construct output dict with default column
+        output = {"cpu" : r.getrusage(r.RUSAGE_CHILDREN)[0] - old_time, "name" : name}
         # result is a binary string, so we decode
         for entry in result.decode('utf-8').split('\n'):
             # get last instance of every prefixed line
